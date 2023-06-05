@@ -23,6 +23,11 @@ abstract class CommunityRepository {
 
   Future<List<Community>> discoverNewCommunities();
   Future<List<Post>> fetchallCommunityPosts(String communityId);
+  Future<List<Post>> fetchMyCommunityPosts(String communityId);
+  Future<List<Post>> fetchallCommunityPostsByCategory(
+      String communityId, String categoryName);
+  Future<List<Post>> fetchMyCommunityPostsByCategory(
+      String communityId, String categoryName);
 
   Future<List<Community>> fetchMyCommunities();
   Future createCommunityPost(
@@ -179,6 +184,79 @@ class CommunityRepositoryImpl implements CommunityRepository {
     final QuerySnapshot querySnapshot = await postFirebaseFirestore
         .where('communityId', isEqualTo: communityId)
         .where('createdBy', isNotEqualTo: uid)
+        // .orderBy('createdAt', descending: true)
+        .get();
+
+    // Extract the documents where the currentUserID is not present in the 'posts' array
+    // final List<QueryDocumentSnapshot> posts = querySnapshot.docs
+    //     .where((doc) => !(doc['members'] as List<dynamic>).contains(uid))
+    //     .toList();
+
+    for (var post in querySnapshot.docs) {
+      var result = Post.fromJson(post.data());
+      communityPosts.add(result);
+    }
+
+    return communityPosts;
+  }
+
+  @override
+  Future<List<Post>> fetchMyCommunityPosts(String communityId) async {
+    List<Post> communityPosts = [];
+    String? uid = firebaseAuth.currentUser?.uid.toString();
+    final QuerySnapshot querySnapshot = await postFirebaseFirestore
+        .where('communityId', isEqualTo: communityId)
+        .where('createdBy', isEqualTo: uid)
+        // .orderBy('createdAt', descending: true)
+        .get();
+
+    // Extract the documents where the currentUserID is not present in the 'posts' array
+    // final List<QueryDocumentSnapshot> posts = querySnapshot.docs
+    //     .where((doc) => !(doc['members'] as List<dynamic>).contains(uid))
+    //     .toList();
+
+    for (var post in querySnapshot.docs) {
+      var result = Post.fromJson(post.data());
+      communityPosts.add(result);
+    }
+
+    return communityPosts;
+  }
+
+  @override
+  Future<List<Post>> fetchMyCommunityPostsByCategory(
+      String communityId, String categoryName) async {
+    List<Post> communityPosts = [];
+    String? uid = firebaseAuth.currentUser?.uid.toString();
+    final QuerySnapshot querySnapshot = await postFirebaseFirestore
+        .where('communityId', isEqualTo: communityId)
+        .where('createdBy', isEqualTo: uid)
+        .where('categoryName', isEqualTo: categoryName)
+        // .orderBy('createdAt', descending: true)
+        .get();
+
+    // Extract the documents where the currentUserID is not present in the 'posts' array
+    // final List<QueryDocumentSnapshot> posts = querySnapshot.docs
+    //     .where((doc) => !(doc['members'] as List<dynamic>).contains(uid))
+    //     .toList();
+
+    for (var post in querySnapshot.docs) {
+      var result = Post.fromJson(post.data());
+      communityPosts.add(result);
+    }
+
+    return communityPosts;
+  }
+
+  @override
+  Future<List<Post>> fetchallCommunityPostsByCategory(
+      String communityId, String categoryName) async {
+    List<Post> communityPosts = [];
+    String? uid = firebaseAuth.currentUser?.uid.toString();
+    final QuerySnapshot querySnapshot = await postFirebaseFirestore
+        .where('communityId', isEqualTo: communityId)
+        .where('createdBy', isNotEqualTo: uid)
+        .where('categoryName', isEqualTo: categoryName)
         // .orderBy('createdAt', descending: true)
         .get();
 

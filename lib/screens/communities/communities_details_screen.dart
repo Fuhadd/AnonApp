@@ -1,6 +1,7 @@
 import 'package:anon/components/generic_dialog.dart';
 import 'package:anon/screens/communities/create_post_screen.dart';
 import 'package:anon/utils/enum.dart';
+import 'package:anon/utils/time_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -52,13 +53,32 @@ class _CommunitiesDetailsScreenState
         .fetchallCommunityPosts(ref, communityId);
   }
 
+  Future<List<Post>> fetchallCommunityPostsByCategory(
+      String communityId, String categoryName) async {
+    // Perform the asynchronous operation to fetch data
+    // ...
+    // Return the fetched data
+    return await CommunityViewModel.initWhoAmI()
+        .fetchallCommunityPostsByCategory(ref, communityId, categoryName);
+  }
+
   Future<List<Post>> fetchMyCommunityPosts(String communityId) async {
     // Perform the asynchronous operation to fetch data
     // ...
     // Return the fetched data
     await Future.delayed(const Duration(seconds: 5));
     return await CommunityViewModel.initWhoAmI()
-        .fetchallCommunityPosts(ref, communityId);
+        .fetchMyCommunityPosts(ref, communityId);
+  }
+
+  Future<List<Post>> fetchMyCommunityPostsByCategory(
+      String communityId, String categoryName) async {
+    // Perform the asynchronous operation to fetch data
+    // ...
+    // Return the fetched data
+    await Future.delayed(const Duration(seconds: 5));
+    return await CommunityViewModel.initWhoAmI()
+        .fetchMyCommunityPostsByCategory(ref, communityId, categoryName);
   }
 
   @override
@@ -548,23 +568,34 @@ class _CommunitiesDetailsScreenState
 
                             Expanded(
                               child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 10.0),
+                                padding: const EdgeInsets.only(bottom: 10.0),
                                 child: TabBarView(
                                   physics: const NeverScrollableScrollPhysics(),
                                   controller:
                                       _tabController, // Assign TabController to TabBarView
                                   children: [
+                                    activeIndex == -1
+                                        ? CommunityDetailsFutureBuilder(
+                                            ref: ref,
+                                            fetchData: fetchallCommunityPosts(
+                                                communityId),
+                                            mainColor: mainColor,
+                                          )
+                                        : CommunityDetailsFutureBuilder(
+                                            ref: ref,
+                                            fetchData:
+                                                fetchallCommunityPostsByCategory(
+                                                    communityId,
+                                                    discussions[activeIndex]),
+                                            mainColor: mainColor,
+                                          ),
                                     CommunityDetailsFutureBuilder(
                                       ref: ref,
-                                      fetchData:
-                                          fetchallCommunityPosts(communityId),
-                                      mainColor: mainColor,
-                                    ),
-                                    CommunityDetailsFutureBuilder(
-                                      ref: ref,
-                                      fetchData:
-                                          fetchMyCommunityPosts(communityId),
+                                      fetchData: activeIndex == -1
+                                          ? fetchMyCommunityPosts(communityId)
+                                          : fetchMyCommunityPostsByCategory(
+                                              communityId,
+                                              discussions[activeIndex]),
                                       mainColor: mainColor,
                                     ),
                                   ],
@@ -750,6 +781,9 @@ class CommunityPostContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String postTitle =
+        post.post.length > 40 ? post.post.substring(0, 20) : post.post;
+    String postBody = post.post.length > 50 ? post.post.substring(20) : '...';
     return GestureDetector(
       onTap: () {},
       child: Padding(
@@ -770,6 +804,7 @@ class CommunityPostContainer extends StatelessWidget {
           child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   verticalSpacer(20),
                   Row(
@@ -816,7 +851,8 @@ class CommunityPostContainer extends StatelessWidget {
                                 maxLines: 2,
                               ),
                               Text(
-                                "2 hours ago",
+                                TimeUtils.calculateTimeDiffernce(
+                                    post.createdAt),
                                 style: TextStyle(
                                   fontSize: 14,
                                   color:
@@ -837,13 +873,29 @@ class CommunityPostContainer extends StatelessWidget {
                     ],
                   ),
                   verticalSpacer(20),
-                  const Text(
-                    "How will I know if he is serious or just pass time?",
-                    style: TextStyle(
+                  Text(
+                    post.post,
+                    // "How will I know if he is serious or just pass time?",
+                    style: const TextStyle(
                         fontWeight: FontWeight.w700,
                         color: CustomColors.blackBgColor,
                         fontSize: 20),
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
                   ),
+                  // verticalSpacer(20),
+                  // Text(
+                  //   postBody,
+                  //   style: TextStyle(
+                  //     fontSize: 15,
+                  //     fontWeight: FontWeight.w400,
+                  //     color: const Color(0xff5F5F5F).withOpacity(0.8),
+                  //   ),
+                  //   maxLines: 2,
+                  //   // overflow: TextOverflow.ellipsis,
+                  //   // softWrap: false,
+                  //   // maxLines: 2,
+                  // ),
                   verticalSpacer(20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

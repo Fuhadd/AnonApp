@@ -168,6 +168,62 @@ class CommunityViewModel extends BaseChangeNotifier {
     return [];
   }
 
+  Future<List<Post>> fetchallCommunityPostsByCategory(
+      WidgetRef ref, String communityId, String categoryName) async {
+    try {
+      var res = await communityRepository.fetchallCommunityPostsByCategory(
+          communityId, categoryName);
+      print(res);
+      ref.read(CommunityPostsProvider.notifier).state = res;
+      return res;
+    } catch (error) {
+      print("------------------>");
+      print(error.toString());
+      // GenericDialog().showSimplePopup(
+      //   type: InfoBoxType.error,
+      //   content: error.toString(),
+      // );
+    }
+    return [];
+  }
+
+  Future<List<Post>> fetchMyCommunityPosts(
+      WidgetRef ref, String communityId) async {
+    try {
+      var res = await communityRepository.fetchMyCommunityPosts(communityId);
+      print(res);
+      ref.read(CommunityPostsProvider.notifier).state = res;
+      return res;
+    } catch (error) {
+      print("------------------>");
+      print(error.toString());
+      // GenericDialog().showSimplePopup(
+      //   type: InfoBoxType.error,
+      //   content: error.toString(),
+      // );
+    }
+    return [];
+  }
+
+  Future<List<Post>> fetchMyCommunityPostsByCategory(
+      WidgetRef ref, String communityId, String categoryName) async {
+    try {
+      var res = await communityRepository.fetchMyCommunityPostsByCategory(
+          communityId, categoryName);
+      print(res);
+      ref.read(CommunityPostsProvider.notifier).state = res;
+      return res;
+    } catch (error) {
+      print("------------------>");
+      print(error.toString());
+      // GenericDialog().showSimplePopup(
+      //   type: InfoBoxType.error,
+      //   content: error.toString(),
+      // );
+    }
+    return [];
+  }
+
   //  Future<List<Community>> discoverNewCommunities(WidgetRef ref) async {
   //   try {
   //     var res = await communityRepository.discoverNewCommunities();
