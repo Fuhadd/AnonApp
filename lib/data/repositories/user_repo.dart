@@ -18,7 +18,9 @@ abstract class UserRepository {
   Future<String?> saveUserCredentials(
       String email, String userName, String avatarUrl, DateTime accountCreated);
   Future<AppUser?> getUsersCredentials();
-  Stream<QuerySnapshot<Object?>>? getAllConfessions();
+  // Stream<QuerySnapshot<Object?>>? getAllConfessions();
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getAllConfessions();
+  //  Future<GenericResponse> getUsersForMatching(int pageNumber, int pageSize);
 }
 
 class UserRepositoryImpl implements UserRepository {
@@ -164,11 +166,12 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   @override
-  Stream<QuerySnapshot<Object?>>? getAllConfessions() {
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
+      getAllConfessions() async {
     String uid = firebaseAuth.currentUser!.uid;
 
-    final appUser = firebaseFirestore.doc(uid).collection("confessions");
-    final snapshot = appUser.snapshots();
-    return snapshot;
+    final confessions = firebaseFirestore.doc(uid).collection("confessions");
+    final snapshot = await confessions.get();
+    return snapshot.docs;
   }
 }

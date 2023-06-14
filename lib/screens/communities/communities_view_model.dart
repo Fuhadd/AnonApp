@@ -7,7 +7,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 import '../../data/view_model/base_change_notifier.dart';
@@ -52,13 +51,13 @@ class CommunityViewModel extends BaseChangeNotifier {
 
   FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
-  Stream<QuerySnapshot<Object?>>? getAllConfessions() {
-    try {
-      final confessions = userRepository.getAllConfessions();
-      return confessions;
-    } catch (error) {}
-    return null;
-  }
+  // Stream<QuerySnapshot<Object?>>? getAllConfessions() {
+  //   try {
+  //     final confessions = userRepository.getAllConfessions();
+  //     return confessions;
+  //   } catch (error) {}
+  //   return null;
+  // }
 
   Future<void> createCommunity({
     required String name,

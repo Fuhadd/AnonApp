@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:anon/models/confession_response_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -45,11 +46,72 @@ class ConfessionViewModel extends BaseChangeNotifier {
 
   FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
-  Stream<QuerySnapshot<Object?>>? getAllConfessions() {
+  // Stream<QuerySnapshot<Object?>>? getAllConfessions() {
+  //   try {
+  //     final confessions = userRepository.getAllConfessions();
+
+  //     return confessions;
+  //   } catch (error) {}
+  //   return null;
+  // }
+
+  Future<void> getAllConfessions(WidgetRef ref) async {
     try {
-      final confessions = userRepository.getAllConfessions();
-      return confessions;
+      final confessions = await userRepository.getAllConfessions();
+      for (var confession in confessions) {
+        var result = ConfessionResponse.fromJson(confession);
+        ref.read(confessionsProvider.notifier).state = [
+          ...ref.watch(confessionsProvider),
+          result
+        ];
+
+        // ref.read(discoverMatchesProvider.notifier).state.add(userData);
+      }
     } catch (error) {}
-    return null;
+    return;
   }
+
+  // Future<void> getUsersForMatching({
+  //   required int pageNumber,
+  //   required int pageSize,
+  //   required WidgetRef ref,
+  //   BuildContext? context,
+  // }) async {
+  //   try {
+  //     isLoading = true;
+  //     final res = await userRepository.getUsersForMatching(
+  //       pageNumber,
+  //       pageSize,
+  //     );
+
+  //     if (res.success) {
+  //       for (var users in res.data) {
+  //         var userData = UserDataModel.fromJson(users);
+  //         ref.read(confessionsProvider.notifier).state = [
+  //           ...ref.watch(confessionsProvider),
+  //           userData
+  //         ];
+
+  //         // ref.read(discoverMatchesProvider.notifier).state.add(userData);
+  //       }
+  //     } else {
+  //       isLoading = false;
+  //       ScaffoldMessenger.of(context!)
+  //         ..removeCurrentSnackBar()
+  //         ..showSnackBar(SnackBar(
+  //           content: Text(res.errors!.join('\n')),
+  //           backgroundColor: Colors.red,
+  //         ));
+  //     }
+  //   } catch (e, stacktrace) {
+  //     isLoading = false;
+  //     debugPrint(e.toString());
+
+  //     log(e.toString());
+  //     log(stacktrace.toString());
+  //   }
+  // }
 }
+
+final confessionsProvider =
+    StateProvider<List<ConfessionResponse>>((ref) => []);
