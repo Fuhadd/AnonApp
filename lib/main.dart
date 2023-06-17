@@ -18,6 +18,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await setupLocator();
+  // FlutterBranchSdk.validateSDKIntegration();
   runApp(const ProviderScope(child: MyApp()));
 }
 

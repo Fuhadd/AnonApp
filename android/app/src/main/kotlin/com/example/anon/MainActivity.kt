@@ -1,4 +1,4 @@
-package com.example.anon
+package com.foumtech.wisper
 
 import io.flutter.embedding.android.FlutterActivity
 

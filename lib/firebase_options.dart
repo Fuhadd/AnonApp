@@ -67,8 +67,9 @@ class DefaultFirebaseOptions {
     messagingSenderId: '94213465783',
     projectId: 'anon-c0a35',
     storageBucket: 'anon-c0a35.appspot.com',
-    iosClientId: '94213465783-2om936a8rgv9ongkftqd31qavjgv5asa.apps.googleusercontent.com',
-    iosBundleId: 'com.example.anon',
+    iosClientId:
+        '94213465783-2om936a8rgv9ongkftqd31qavjgv5asa.apps.googleusercontent.com',
+    iosBundleId: 'com.foumtech.wisper',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -77,7 +78,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '94213465783',
     projectId: 'anon-c0a35',
     storageBucket: 'anon-c0a35.appspot.com',
-    iosClientId: '94213465783-2om936a8rgv9ongkftqd31qavjgv5asa.apps.googleusercontent.com',
-    iosBundleId: 'com.example.anon',
+    iosClientId:
+        '94213465783-2om936a8rgv9ongkftqd31qavjgv5asa.apps.googleusercontent.com',
+    iosBundleId: 'com.foumtech.wisper',
   );
 }
