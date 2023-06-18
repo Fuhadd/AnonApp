@@ -4,5 +4,10 @@
 <dict>
 	<key>aps-environment</key>
 	<string>development</string>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>wispers.app.link</string>
+		<string>wispers-alternate.app.link</string>
+	</array>
 </dict>
 </plist>

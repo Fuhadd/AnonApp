@@ -47,5 +47,30 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>branch_universal_link_domains</key>
+    <array>
+        <string>wispers.app.link</string>
+        <string>wispers-alternate.app.link</string>
+    </array>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>branchsters</string>
+            </array>
+            <key>CFBundleURLName</key>
+            <string>io.Branch.Branchsters</string>
+        </dict>
+    </array>
+    <key>branch_key</key>
+    <dict>
+        <key>live</key>
+        <string>key_live_fsbiRLhEFwodzs8Dpltv2nbiBtmwu1ur</string>
+        <key>test</key>
+        <string>secret_live_HSW2egdf52pkJhxoT54JqVvO1CMohCbE</string>
+    </dict>
 </dict>
 </plist>

@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "anon",
+            "name": "AnonApp",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "anon (profile mode)",
+            "name": "AnonApp (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "anon (release mode)",
+            "name": "AnonApp (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

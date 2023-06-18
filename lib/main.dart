@@ -5,6 +5,7 @@ import 'package:anon/utils/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'firebase_options.dart';
@@ -18,7 +19,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await setupLocator();
-  // FlutterBranchSdk.validateSDKIntegration();
+  FlutterBranchSdk.validateSDKIntegration();
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       routes: appRoutes,
       navigatorKey: locator<NavigationHandler>().navigatorKey,
-      title: 'Flutter Demo',
+      title: 'Wisper',
       theme: AppTheme.defaultAppTheme,
       // home: const CommunityCreateScreen(),
       // home: const OnboardingPageViewScreen(),

@@ -101,10 +101,11 @@ class _ConfessionScreenState extends ConsumerState<ConfessionScreen> {
                   fontSize: 15),
             ),
             verticalSpacer(20),
+
             initialConfessions.isNotEmpty
                 ? Expanded(
                     child: ListView.builder(
-                      itemCount: initialConfessions.length,
+                      itemCount: 5,
                       controller: scrollController,
                       itemBuilder: (context, index) {
                         return SlantedContainer(
