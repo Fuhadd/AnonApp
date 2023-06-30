@@ -1,5 +1,6 @@
 import 'package:anon/style/custom_theme.dart';
 import 'package:anon/utils/routes.dart';
+import 'package:anon/widgets/test/awesome_carousel.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
@@ -7,7 +8,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'firebase_options.dart';
 import 'locator.dart';
-import 'screens/confessions/confession_main_screen.dart';
 import 'utils/navigator_handler.dart';
 
 void main() async {
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       navigatorKey: locator<NavigationHandler>().navigatorKey,
       title: 'Wisper',
       theme: AppTheme.defaultAppTheme,
-      home: const ConfessionMainScreen(),
+      home: const AwesomeCarousel(),
       // home: const OnboardingPageViewScreen(),
       // home: const AuthScreen(
       //   authType: AuthType.signIn,
