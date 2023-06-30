@@ -22,6 +22,7 @@ class _GenerateConfessionLinkScreenState
     BranchResponse response =
         await FlutterBranchSdk.getShortUrl(buo: buo, linkProperties: lp);
     if (response.success) {
+      print(response.result);
       GenericDialog()
           .showSimplePopup(type: InfoBoxType.success, content: response.result);
     } else {
@@ -72,7 +73,7 @@ class _GenerateConfessionLinkScreenState
                     contentDescription: 'Flutter Branch Description',
                     contentMetadata: BranchContentMetaData()
                       ..addCustomMetadata('title', 'Wisper')
-                      ..addCustomMetadata('custom_number', 12345)
+                      ..addCustomMetadata('key', 12345)
                       ..addCustomMetadata('custom_bool', true)
                       ..addCustomMetadata('custom_list_number', [1, 2, 3, 4, 5])
                       ..addCustomMetadata(
