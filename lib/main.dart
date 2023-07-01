@@ -1,15 +1,14 @@
-import 'package:anon/screens/onboarding/onboarding_page_view.dart';
 import 'package:anon/style/custom_theme.dart';
 import 'package:anon/utils/routes.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'firebase_options.dart';
 import 'locator.dart';
 import 'screens/dashboard/dashboard_screen.dart';
+import 'screens/onboarding/onboarding_page_view.dart';
 import 'screens/startup/splash_screen.dart';
 import 'utils/navigator_handler.dart';
 
@@ -19,7 +18,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await setupLocator();
-  FlutterBranchSdk.validateSDKIntegration();
+  // FlutterBranchSdk.validateSDKIntegration();
   runApp(const ProviderScope(child: MyApp()));
 }
 

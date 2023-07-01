@@ -7,7 +7,7 @@ import '../../data/local_cache/local_cache.dart';
 import '../../locator.dart';
 import '../communities/communities_screen.dart';
 import '../communities/communities_view_model.dart';
-import '../confessions/confession_screen.dart';
+import '../confessions/initial_confession_screen.dart';
 import '../home/home_page.dart';
 import '../messages/messages_screen.dart';
 import 'dashboard_view_model.dart';
@@ -42,11 +42,13 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
     final discoveredCommunities = ref.read(discoveredCommunitiesProvider);
 
     final List<Widget> pages = [
+      //? Make sure to make confession first
       // const HomeScreen(),
-      const ConfessionScreen(),
+      // const ConfessionScreen(),
       CommunitiesScreen2(
         discoveredCommunities: discoveredCommunities,
       ),
+      const InitialConfessionScreen(),
       const HomePage(),
       const MessagesScreen(),
     ];
