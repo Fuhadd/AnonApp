@@ -1,13 +1,15 @@
 import 'package:anon/style/custom_theme.dart';
 import 'package:anon/utils/routes.dart';
-import 'package:anon/widgets/test/awesome_carousel.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_branch_sdk/flutter_branch_sdk.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'firebase_options.dart';
 import 'locator.dart';
+import 'screens/dashboard/dashboard_screen.dart';
+import 'screens/onboarding/onboarding_page_view.dart';
+import 'screens/startup/splash_screen.dart';
 import 'utils/navigator_handler.dart';
 
 void main() async {
@@ -16,7 +18,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await setupLocator();
-  FlutterBranchSdk.validateSDKIntegration();
+  // FlutterBranchSdk.validateSDKIntegration();
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -32,23 +34,23 @@ class MyApp extends StatelessWidget {
       navigatorKey: locator<NavigationHandler>().navigatorKey,
       title: 'Wisper',
       theme: AppTheme.defaultAppTheme,
-      home: const AwesomeCarousel(),
+      // home: const GenerateConfessionLinkScreen(),
       // home: const OnboardingPageViewScreen(),
       // home: const AuthScreen(
       //   authType: AuthType.signIn,
       // ),
 
-      // home: StreamBuilder<User?>(
-      //     stream: FirebaseAuth.instance.authStateChanges(),
-      //     builder: (context, snapshot) {
-      //       if (snapshot.connectionState == ConnectionState.waiting) {
-      //         return const SplashScreen();
-      //       } else if (snapshot.hasData) {
-      //         return const DashboardScreen();
-      //       } else {
-      //         return const OnboardingPageViewScreen();
-      //       }
-      //     }),
+      home: StreamBuilder<User?>(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const SplashScreen();
+            } else if (snapshot.hasData) {
+              return const DashboardScreen();
+            } else {
+              return const OnboardingPageViewScreen();
+            }
+          }),
     );
   }
 }
