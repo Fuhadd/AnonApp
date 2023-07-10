@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../widgets/old_slanted_container.dart';
 import 'confession_view_model.dart';
 
 class InitialConfessionScreen extends StatefulHookConsumerWidget {
@@ -19,9 +20,13 @@ class InitialConfessionScreen extends StatefulHookConsumerWidget {
 class _InitialConfessionScreenState
     extends ConsumerState<InitialConfessionScreen> {
   late ScrollController scrollController;
+  double scrolling = 0;
+  int currentVisibleItemIndex = 0;
 
   @override
   void initState() {
+    scrollController = ScrollController();
+    scrollController.addListener(scrollListernerWithCount);
     super.initState();
   }
 
@@ -35,9 +40,17 @@ class _InitialConfessionScreenState
       id: "id",
       imageUrl: "imageUrl",
       userName: "@elvis",
+      title: "Send An Anonymous Message",
+      content:
+          "I have something to confess that has been eating away at me. It's about love—a love that caught me completely off guard. I never expected to feel this way, but here I am, hopelessly smitten. Every time I see them, my heart races, and my mind goes blank. It's like ",
+    );
+    ConfessionResponse testData2 = ConfessionResponse(
+      id: "id",
+      imageUrl: "imageUrl",
+      userName: "@princess",
       title: "Had a bad day at the gym, I'm wheezing",
       content:
-          "Unlimited cards and spaces, investments tips and much more more more more more more more more more more more more more more more more more",
+          "You won't believe the kind of day I had at the gym today. It was an absolute disaster, and I'm still wheezing from the exhaustion and frustration. Everything seemed to go wrong right from the start. ",
     );
     return Scaffold(
       backgroundColor: CustomColors.whiteBgColor,
@@ -139,9 +152,42 @@ class _InitialConfessionScreenState
                 ),
               ),
             ),
+            verticalSpacer(30),
+            Expanded(
+              child: ListView.builder(
+                itemCount: 5,
+                controller: scrollController,
+                itemBuilder: (context, index) {
+                  return SlantedContainer(
+                    index: index,
+                    currentVisibleItemIndex: currentVisibleItemIndex,
+                    scrolling: scrolling,
+                    confession: index == 0 ? testData : testData2,
+                  );
+                  // return PerspectiveWidgetx(
+                  //     index, currentVisibleItemIndex, scrolling);
+                },
+              ),
+            )
           ],
         ),
       ),
     );
+  }
+
+  void scrollListernerWithCount() {
+    int itemCount = 10;
+    double scrollOffset = scrollController.position.pixels;
+    double viewportHeight = scrollController.position.viewportDimension;
+    double scrollRange = scrollController.position.maxScrollExtent -
+        scrollController.position.minScrollExtent;
+    int firstVisibleItemIndex =
+        (scrollOffset / (scrollRange + viewportHeight) * itemCount).floor();
+    currentVisibleItemIndex = firstVisibleItemIndex;
+    scrolling = (scrollOffset / (scrollRange + viewportHeight) * itemCount);
+    scrolling = double.parse(scrolling.toStringAsFixed(2));
+    setState(() {
+      print(firstVisibleItemIndex);
+    });
   }
 }

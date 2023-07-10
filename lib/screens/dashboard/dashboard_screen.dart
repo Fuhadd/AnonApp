@@ -45,11 +45,12 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
       //? Make sure to make confession first
       // const HomeScreen(),
       // const ConfessionScreen(),
+      const HomePage(),
+      const InitialConfessionScreen(),
       CommunitiesScreen2(
         discoveredCommunities: discoveredCommunities,
       ),
-      const InitialConfessionScreen(),
-      const HomePage(),
+
       const MessagesScreen(),
     ];
     final userData = locator<LocalCache>().getUserData();
@@ -180,9 +181,9 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen>
                         activeIcon: FaIcon(FontAwesomeIcons.fire),
                       ),
                       BottomNavigationBarItem(
-                        icon: FaIcon(FontAwesomeIcons.searchengin),
+                        icon: FaIcon(FontAwesomeIcons.peopleGroup),
                         label: '',
-                        activeIcon: FaIcon(FontAwesomeIcons.searchengin),
+                        activeIcon: FaIcon(FontAwesomeIcons.peopleGroup),
                       ),
                       BottomNavigationBarItem(
                         icon: FaIcon(Icons.message),
