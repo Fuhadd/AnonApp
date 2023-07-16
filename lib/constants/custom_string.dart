@@ -1,5 +1,6 @@
 class ConstantString {
   static const userJson = "UserJson";
+  static const referralLink = "referralLink";
   static const referAndEarn =
       'Join our affiliate program and earn money with every referral you make.';
 

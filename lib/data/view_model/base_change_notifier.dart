@@ -4,16 +4,19 @@ import '../../components/app_logger.dart';
 import '../../locator.dart';
 import '../../utils/navigator_handler.dart';
 import '../local_cache/local_cache.dart';
+import '../repositories/chat_repo.dart';
 import '../repositories/user_repo.dart';
 
 class BaseChangeNotifier extends ChangeNotifier {
   late UserRepository userRepository;
+  late ChatRepository chatRepository;
   late LocalCache localCache;
   late NavigationHandler navigationHandler;
   late CommunityRepository communityRepository;
 
   BaseChangeNotifier({
     UserRepository? userRepository,
+    ChatRepository? chatRepository,
     CommunityRepository? communityRepository,
     LocalCache? localCache,
     NavigationHandler? navigationHandler,
@@ -22,6 +25,7 @@ class BaseChangeNotifier extends ChangeNotifier {
     this.localCache = localCache ?? locator();
     this.navigationHandler = navigationHandler ?? locator();
     this.communityRepository = communityRepository ?? locator();
+    this.chatRepository = chatRepository ?? locator();
   }
 
   // ignore: prefer_final_fields

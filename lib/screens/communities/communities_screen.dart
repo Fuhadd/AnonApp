@@ -67,7 +67,7 @@ class _CommunitiesScreen2State extends ConsumerState<CommunitiesScreen2>
     // Perform the asynchronous operation to fetch data
     // ...
     // Return the fetched data
-    await Future.delayed(const Duration(seconds: 5));
+    // await Future.delayed(const Duration(seconds: 5));
     return await CommunityViewModel.initWhoAmI().fetchMyCommunities(ref);
   }
 
@@ -106,7 +106,7 @@ class _CommunitiesScreen2State extends ConsumerState<CommunitiesScreen2>
                             ),
                             verticalSpacer(10),
                             Text(
-                              "Get emotional advice, aske questions",
+                              "Get emotional advice, ask questions",
                               style: TextStyle(
                                   color:
                                       CustomColors.greyBgColor.withOpacity(0.7),
@@ -595,6 +595,7 @@ class CommunitiesFutureBuilder extends StatelessWidget {
                   title: snapshot.data![index].name,
                   message: snapshot.data![index].description,
                   quickIcon: communityIconList[snapshot.data![index].icon],
+                  categories: snapshot.data![index].categories,
                   quickIconColor: const Color(0xff000000),
                   quickTitleColor: const Color(0xff000000),
                   quickBackgroundColor: CustomColors

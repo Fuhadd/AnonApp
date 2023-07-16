@@ -10,6 +10,7 @@ class QuickAccess extends StatelessWidget {
       quickBackgroundColor,
       quickBorderColor;
   final bool isMember;
+  final List<String> categories;
   const QuickAccess(
       {Key? key,
       required this.title,
@@ -21,6 +22,7 @@ class QuickAccess extends StatelessWidget {
       required this.quickBackgroundColor,
       required this.quickBorderColor,
       required this.communityId,
+      required this.categories,
       required this.quickRoute})
       : super(key: key);
 
@@ -35,6 +37,7 @@ class QuickAccess extends StatelessWidget {
           "message": message,
           "isMember": isMember,
           "communityId": communityId,
+          "categories": categories,
         });
       },
       focusColor: Color(0xff5BBE5F),

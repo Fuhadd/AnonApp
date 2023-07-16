@@ -1,12 +1,20 @@
 import 'package:anon/constants/custom_colors.dart';
+import 'package:anon/constants/custom_string.dart';
+import 'package:anon/locator.dart';
+import 'package:anon/models/app_user_model.dart';
 import 'package:anon/models/confession_response_model.dart';
 import 'package:anon/screens/confessions/confession_send_screen.dart';
+import 'package:anon/screens/confessions/confession_streambuilder.dart';
 import 'package:anon/utils/spacers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:share_plus/share_plus.dart';
 
-import '../../widgets/old_slanted_container.dart';
+import '../../data/local_cache/local_cache.dart';
+import '../../utils/branch_functions.dart';
+import '../../utils/clipboard_toaster.dart';
 import 'confession_view_model.dart';
 
 class InitialConfessionScreen extends StatefulHookConsumerWidget {
@@ -18,15 +26,43 @@ class InitialConfessionScreen extends StatefulHookConsumerWidget {
 }
 
 class _InitialConfessionScreenState
-    extends ConsumerState<InitialConfessionScreen> {
+    extends ConsumerState<InitialConfessionScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
   late ScrollController scrollController;
   double scrolling = 0;
   int currentVisibleItemIndex = 0;
+  late AppUser userData;
+  late Object? userLink;
 
   @override
   void initState() {
+    _tabController = TabController(
+      length: 2,
+      vsync: this,
+    ); // Create Ta
     scrollController = ScrollController();
     scrollController.addListener(scrollListernerWithCount);
+    userData = locator<LocalCache>().getUserData();
+    userLink =
+        locator<LocalCache>().getFromLocalCache(ConstantString.referralLink);
+
+    // locator<LocalCache>().removeFromLocalCache(ConstantString.referralLink);
+    if (userLink == null) {
+      BranchFunctions.generateLink(
+        userData.userName,
+        userData.id!,
+        userData.avatarUrl,
+        onOkPressed: () {
+          setState(() {
+            userLink = locator<LocalCache>()
+                .getFromLocalCache(ConstantString.referralLink);
+          });
+          Navigator.pop(context);
+        },
+      );
+    }
+
     super.initState();
   }
 
@@ -35,7 +71,14 @@ class _InitialConfessionScreenState
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
     final confessionVM = ref.watch(confessionProvider);
-    final initialConfessions = ref.read(confessionsProvider);
+    final initialConfessions = ref.read(confessionsProviderList);
+    // var userLink =
+    //     locator<LocalCache>().getFromLocalCache(ConstantString.referralLink) ==
+    //             null
+    //         ? ""
+    //         : locator<LocalCache>()
+    //             .getFromLocalCache(ConstantString.referralLink)
+    //             .toString();
     ConfessionResponse testData = ConfessionResponse(
       id: "id",
       imageUrl: "imageUrl",
@@ -77,8 +120,12 @@ class _InitialConfessionScreenState
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: ((context) =>
-                                const ConfessionSendScreen())));
+                            builder: ((context) => const ConfessionSendScreen(
+                                // destinationId: "33UTvAD92WedvsWV3pu54QXMWvm1",
+                                // destinationImage:
+                                //     "https://firebasestorage.googleapis.com/v0/b/anon-c0a35.appspot.com/o/anonAvatarImages%2Fskull.png?alt=media&token=987fa747-14ed-48d2-b758-085da61625da",
+                                // destinationName: "Harminu",
+                                ))));
                   },
                   child: Container(
                       // margin:
@@ -104,10 +151,10 @@ class _InitialConfessionScreenState
             ),
             verticalSpacer(10),
             Text(
-              "Get emotional advice, ask questions",
+              "Confess, connect, embrace understanding",
               style: TextStyle(
                   color: CustomColors.greyBgColor.withOpacity(0.7),
-                  fontSize: 15),
+                  fontSize: 14),
             ),
             verticalSpacer(20),
             Container(
@@ -131,44 +178,130 @@ class _InitialConfessionScreenState
                   children: [
                     Row(
                       children: [
-                        const Icon(
-                          Icons.copy,
-                          size: 20,
+                        GestureDetector(
+                          onTap: userLink == null
+                              ? null
+                              : () async {
+                                  await Clipboard.setData(
+                                      ClipboardData(text: userLink.toString()));
+                                  ToastNotification.show(
+                                      context: context,
+                                      toastMessage: "Copied to clipboard!");
+                                },
+                          child: const Icon(
+                            Icons.copy,
+                            size: 20,
+                          ),
                         ),
                         horizontalSpacer(20),
-                        const Text(
-                          "wispers.app.link/6xTFRMWW2Ab",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              color: CustomColors.greyBgColor, fontSize: 12),
+                        SizedBox(
+                          width: 230,
+                          child: Text(
+                            // "wispers.app.link/6xTFRMWW2j doudnidujndiundidnidnidbdibdidbiAb",
+                            userLink == null ? "" : userLink.toString(),
+                            // textAlign: TextAlign.center,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                color: CustomColors.greyBgColor,
+                                fontSize: 11.5),
+                          ),
                         ),
                       ],
                     ),
-                    const Text(
-                      "Share",
-                      style: TextStyle(color: CustomColors.mainBlueColor),
+                    GestureDetector(
+                      onTap: () {
+                        Share.share(
+                            "Send me anonymous messages on Wispers!\n ${userLink.toString()} \nLet's connect and have open conversations. Looking forward to hearing from you!",
+                            subject: 'Send me an anonymous message');
+                      },
+                      child: const Text(
+                        "Share",
+                        style: TextStyle(color: CustomColors.mainBlueColor),
+                      ),
                     ),
                   ],
                 ),
               ),
             ),
-            verticalSpacer(30),
-            Expanded(
-              child: ListView.builder(
-                itemCount: 5,
-                controller: scrollController,
-                itemBuilder: (context, index) {
-                  return SlantedContainer(
-                    index: index,
-                    currentVisibleItemIndex: currentVisibleItemIndex,
-                    scrolling: scrolling,
-                    confession: index == 0 ? testData : testData2,
-                  );
-                  // return PerspectiveWidgetx(
-                  //     index, currentVisibleItemIndex, scrolling);
-                },
+            verticalSpacer(10),
+            TabBar(
+              isScrollable: true,
+              indicatorSize: TabBarIndicatorSize.label,
+              labelColor: CustomColors.blackColor,
+              unselectedLabelColor: CustomColors.blackBgColor.withOpacity(0.4),
+              labelStyle: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
               ),
-            )
+              unselectedLabelStyle: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w700,
+              ),
+
+              indicator: const BoxDecoration(
+                // borderRadius: BorderRadius.circular(10),
+                border: Border(
+                  bottom: BorderSide(
+                    color: CustomColors.blackBgColor,
+                  ),
+                ),
+                color: Colors.transparent,
+              ),
+              controller: _tabController, // Assign TabController to TabBar
+              tabs: const [
+                Tab(
+                  text: 'Unread',
+                ),
+                Tab(
+                  text: 'Read',
+                ),
+              ],
+            ),
+            // verticalSpacer(20),
+            // verticalSpacer(10),
+            Expanded(
+              child: TabBarView(
+                physics: const NeverScrollableScrollPhysics(),
+                controller:
+                    _tabController, // Assign TabController to TabBarView
+                children: const [
+                  ConfessionStreamBuilder(read: false),
+                  ConfessionStreamBuilder(read: true)
+                  // DirectMessagesScreen(),
+                  // GroupMessagesScreen(),
+                ],
+              ),
+            ),
+            // StreamBuilder(
+            //     stream: confessionVM.getAllConfessionStream(),
+            //     builder: (context, snapshot) {
+            //       if (snapshot.hasError) {
+            //         return Text('Error${snapshot.error}');
+            //       }
+            //       if (snapshot.connectionState == ConnectionState.waiting) {
+            //         return const CircularProgressIndicator();
+            //       }
+            //       return ConfessionCard(
+            //         snapshot: snapshot,
+            //       );
+            //     })
+            // Expanded(
+            //   child: ListView.builder(
+            //     itemCount: 5,
+            //     controller: scrollController,
+            //     itemBuilder: (context, index) {
+            //       return SlantedContainer(
+            //         index: index,
+            //         currentVisibleItemIndex: currentVisibleItemIndex,
+            //         scrolling: scrolling,
+            //         confession: index == 0 ? testData : testData2,
+            //       );
+            //       // return PerspectiveWidgetx(
+            //       //     index, currentVisibleItemIndex, scrolling);
+            //     },
+            //   ),
+            // )
           ],
         ),
       ),

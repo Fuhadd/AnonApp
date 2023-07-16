@@ -74,6 +74,7 @@ class AuthViewModel extends BaseChangeNotifier {
               userName: userName,
               email: email,
               myposts: [],
+              pastConfessor: [],
               avatarUrl: avatarUrl);
           final userJson = json.encode(user.toJson());
           localCache.saveToLocalCache(

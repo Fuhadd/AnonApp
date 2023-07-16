@@ -92,13 +92,8 @@ class _CommunitiesDetailsScreenState
     final String message = args['message'];
     final bool isMember = args['isMember'];
     final String communityId = args['communityId'];
-    List<String> discussions = [
-      "marriage",
-      "longdistance",
-      "intimacy",
-      "findlove",
-      "cheating"
-    ];
+    // final List
+    final List<String> discussions = args['categories'] as List<String>;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -424,10 +419,10 @@ class _CommunitiesDetailsScreenState
                                           _tabController, // Assign TabController to TabBar
                                       tabs: const [
                                         Tab(
-                                          text: 'My Communities',
+                                          text: 'Discover',
                                         ),
                                         Tab(
-                                          text: 'Discover',
+                                          text: 'My Posts',
                                         ),
                                       ],
                                     ),
@@ -576,12 +571,14 @@ class _CommunitiesDetailsScreenState
                                   children: [
                                     activeIndex == -1
                                         ? CommunityDetailsFutureBuilder(
+                                            key: UniqueKey(),
                                             ref: ref,
                                             fetchData: fetchallCommunityPosts(
                                                 communityId),
                                             mainColor: mainColor,
                                           )
                                         : CommunityDetailsFutureBuilder(
+                                            key: UniqueKey(),
                                             ref: ref,
                                             fetchData:
                                                 fetchallCommunityPostsByCategory(
@@ -590,6 +587,7 @@ class _CommunitiesDetailsScreenState
                                             mainColor: mainColor,
                                           ),
                                     CommunityDetailsFutureBuilder(
+                                      key: UniqueKey(),
                                       ref: ref,
                                       fetchData: activeIndex == -1
                                           ? fetchMyCommunityPosts(communityId)
@@ -963,7 +961,7 @@ class CommunityPostContainer extends StatelessWidget {
   }
 }
 
-class CommunityDetailsFutureBuilder extends StatelessWidget {
+class CommunityDetailsFutureBuilder extends StatefulWidget {
   const CommunityDetailsFutureBuilder({
     super.key,
     required this.ref,
@@ -976,14 +974,24 @@ class CommunityDetailsFutureBuilder extends StatelessWidget {
   final Color mainColor;
 
   @override
+  State<CommunityDetailsFutureBuilder> createState() =>
+      _CommunityDetailsFutureBuilderState();
+}
+
+class _CommunityDetailsFutureBuilderState
+    extends State<CommunityDetailsFutureBuilder> {
+  final Key _futureBuilderKey = UniqueKey();
+
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
+      key: _futureBuilderKey,
       // initialData: discoveredCommunities,
       // future:
       //     CommunityViewModel.initWhoAmI().discoverNewCommunities(),
       // future: fetchData(),
       // future: CommunityViewModel.initWhoAmI().discoverNewCommunities(ref),
-      future: fetchData,
+      future: widget.fetchData,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
@@ -1059,7 +1067,7 @@ class CommunityDetailsFutureBuilder extends StatelessWidget {
               itemCount: posts!.length,
               itemBuilder: (BuildContext context, int index) {
                 return CommunityPostContainer(
-                  mainColor: mainColor,
+                  mainColor: widget.mainColor,
                   post: posts[index],
                 );
               },

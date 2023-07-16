@@ -2,8 +2,6 @@ import 'package:anon/models/confession_response_model.dart';
 import 'package:anon/widgets/perspective_item_widget.dart';
 import 'package:flutter/material.dart';
 
-import '../screens/confessions/confession_detail_screen.dart';
-
 class SlantedContainer extends StatefulWidget {
   final int index;
   final int currentVisibleItemIndex;
@@ -67,17 +65,17 @@ class _SlantedContainerState extends State<SlantedContainer>
   void _handleTap() {
     if (_animationController.status == AnimationStatus.completed) {
       // _animationController.reverse();
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ConfessionDetailScreen()),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => const ConfessionDetailScreen()),
+      // );
     } else {
       _animationController.forward().whenComplete(() {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const ConfessionDetailScreen()),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //       builder: (context) => const ConfessionDetailScreen()),
+        // );
       });
     }
   }

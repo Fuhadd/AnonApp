@@ -28,4 +28,23 @@ class ConfessionResponse {
         "title": title,
         "content": content,
       };
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ConfessionResponse &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          imageUrl == other.imageUrl &&
+          userName == other.userName &&
+          title == other.title &&
+          content == other.content;
+
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      imageUrl.hashCode ^
+      userName.hashCode ^
+      title.hashCode ^
+      content.hashCode;
 }

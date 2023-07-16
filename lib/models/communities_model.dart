@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Community {
   final String id;
   final String createdBy;
@@ -8,6 +10,7 @@ class Community {
   final int color;
   final List<dynamic> members;
   final List<dynamic> postIds;
+  final List<String> categories;
 
   Community({
     required this.id,
@@ -19,6 +22,7 @@ class Community {
     required this.color,
     required this.visibility,
     required this.createdBy,
+    required this.categories,
   });
 
   static Community fromJson(json) => Community(
@@ -31,6 +35,8 @@ class Community {
         color: json['color'],
         visibility: json['visibility'],
         createdBy: json['createdBy'],
+        categories:
+            List<String>.from(jsonDecode(jsonEncode(json['categories'] ?? []))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -43,5 +49,6 @@ class Community {
         'color': color,
         'visibility': visibility,
         'createdBy': createdBy,
+        "categories": categories,
       };
 }

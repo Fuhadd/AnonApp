@@ -34,7 +34,7 @@ class _ConfessionScreenState extends ConsumerState<ConfessionScreen> {
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
     final confessionVM = ref.watch(confessionProvider);
-    final initialConfessions = ref.read(confessionsProvider);
+    final initialConfessions = ref.read(confessionsProviderList);
     ConfessionResponse testData = ConfessionResponse(
       id: "id",
       imageUrl: "imageUrl",

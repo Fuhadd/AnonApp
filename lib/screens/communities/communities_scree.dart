@@ -33,7 +33,7 @@ class _CommunitiesScreenState extends ConsumerState<CommunitiesScreen> {
           ),
           verticalSpacer(10),
           Text(
-            "Get emotional advice, aske questions",
+            "Get emotional advice, ask questions",
             style: TextStyle(
                 color: CustomColors.greyBgColor.withOpacity(0.7), fontSize: 15),
           ),

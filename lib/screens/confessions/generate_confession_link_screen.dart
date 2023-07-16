@@ -73,12 +73,9 @@ class _GenerateConfessionLinkScreenState
                     contentDescription: 'Flutter Branch Description',
                     contentMetadata: BranchContentMetaData()
                       ..addCustomMetadata('title', 'Wisper')
-                      ..addCustomMetadata('key', 12345)
-                      ..addCustomMetadata('custom_bool', true)
-                      ..addCustomMetadata('custom_list_number', [1, 2, 3, 4, 5])
-                      ..addCustomMetadata(
-                          'custom_list_string', ['a', 'b', 'c']),
-
+                      ..addCustomMetadata('key', 1)
+                      ..addCustomMetadata('user_name', true)
+                      ..addCustomMetadata('user_id', [1, 2, 3, 4, 5]),
                     // contentMetadata: metadata,
                     keywords: ['Plugin', 'Branch', 'Flutter'],
                     publiclyIndex: true,

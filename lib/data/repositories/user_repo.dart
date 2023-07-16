@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 
+import '../../locator.dart';
 import '../../models/app_user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -20,6 +21,19 @@ abstract class UserRepository {
   Future<AppUser?> getUsersCredentials();
   // Stream<QuerySnapshot<Object?>>? getAllConfessions();
   Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getAllConfessions();
+
+  Future<bool?> sendConfession(
+      {required String message,
+      required String destinationName,
+      required String destinationId,
+      required String destinationImage});
+
+  Stream<QuerySnapshot> getAllConfessionStream();
+  Stream<QuerySnapshot> getAllReadConfessionStream();
+  Stream<QuerySnapshot> getAllUnreadConfessionStream();
+  Future<bool?> readConfession({
+    required String confessionId,
+  });
   //  Future<GenericResponse> getUsersForMatching(int pageNumber, int pageSize);
 }
 
@@ -33,6 +47,8 @@ class UserRepositoryImpl implements UserRepository {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   CollectionReference firebaseFirestore =
       FirebaseFirestore.instance.collection('UserData');
+  CollectionReference confessionsFirebaseFirestore =
+      FirebaseFirestore.instance.collection('Confessions');
 
   @override
   Future<User?> createUserWithEmail(String email, String password) async {
@@ -142,7 +158,8 @@ class UserRepositoryImpl implements UserRepository {
           'userName': userName,
           'accountCreated': accountCreated,
           'avatarUrl': avatarUrl,
-          'myposts': []
+          'myposts': [],
+          'pastConfessors': []
         },
         SetOptions(
           merge: true,
@@ -173,5 +190,100 @@ class UserRepositoryImpl implements UserRepository {
     final confessions = firebaseFirestore.doc(uid).collection("confessions");
     final snapshot = await confessions.get();
     return snapshot.docs;
+  }
+
+  @override
+  Stream<QuerySnapshot> getAllConfessionStream() {
+    // construct chat room from Id of user
+    String uid = firebaseAuth.currentUser!.uid;
+    final confessions =
+        confessionsFirebaseFirestore.where('destinationId', isEqualTo: uid);
+    // final confessions = firebaseFirestore.doc(uid).collection("confessions");
+    return confessions.snapshots();
+
+    // return chatFirebaseFirestore
+    //     .doc(chatRoomId)
+    //     .collection('messages')
+    //     .orderBy('timestamp', descending: false)
+    //     .snapshots();
+  }
+
+  @override
+  Future<bool?> sendConfession(
+      {required String message,
+      required String destinationName,
+      required String destinationId,
+      required String destinationImage}) async {
+    try {
+      String? uid = firebaseAuth.currentUser?.uid.toString();
+      final docUser = confessionsFirebaseFirestore.doc();
+      final userData = locator<LocalCache>().getUserData();
+      await docUser.set(
+          {
+            "id": docUser.id,
+            "imageUrl": userData.avatarUrl,
+            "userName": userData.userName,
+            "title": "Send me a message",
+            "content": message,
+            "destinationName": destinationName,
+            "destinationId": destinationId,
+            "destinationImage": destinationImage,
+            "read": 0,
+            "createdAt": Timestamp.now(),
+          },
+          SetOptions(
+            merge: true,
+          ));
+      if (uid != null) {
+        Map<String, dynamic> pastConfessorMap = {
+          "id": destinationId,
+          "name": destinationName,
+        };
+        await firebaseFirestore.doc(uid.toString()).update(
+          {
+            'pastConfessors': FieldValue.arrayUnion([pastConfessorMap]),
+          },
+        );
+      }
+
+      return true;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<bool?> readConfession({
+    required String confessionId,
+  }) async {
+    try {
+      await confessionsFirebaseFirestore.doc(confessionId).update(
+        {
+          'read': 1,
+        },
+      );
+
+      return true;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  @override
+  Stream<QuerySnapshot<Object?>> getAllReadConfessionStream() {
+    String uid = firebaseAuth.currentUser!.uid;
+    final confessions = confessionsFirebaseFirestore
+        .where('destinationId', isEqualTo: uid)
+        .where('read', isEqualTo: 1);
+    return confessions.snapshots();
+  }
+
+  @override
+  Stream<QuerySnapshot<Object?>> getAllUnreadConfessionStream() {
+    String uid = firebaseAuth.currentUser!.uid;
+    final confessions = confessionsFirebaseFirestore
+        .where('destinationId', isEqualTo: uid)
+        .where('read', isEqualTo: 0);
+    return confessions.snapshots();
   }
 }

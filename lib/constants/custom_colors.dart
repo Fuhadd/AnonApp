@@ -29,6 +29,8 @@ class CustomColors {
   static const warningBgColor = Color(0xFFEB6E13);
   static const primaryAccentColor = Color(0xFFD2A600);
 
+  static const greyColor = Color(0xFF9CA3AF);
+
   // static const greyBgColor = Color(0xFFD9D9D9);
   static const lighterGreyColor = Color(0xFFF6F6F6);
   static const redTextColor = Color(0xFFDD0101);
